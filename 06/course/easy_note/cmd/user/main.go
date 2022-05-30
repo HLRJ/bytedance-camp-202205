@@ -39,10 +39,12 @@ func Init() {
 }
 
 func main() {
+	// 生成etcd的注册对象 ，生成失败即panic
 	r, err := etcd.NewEtcdRegistry([]string{constants.EtcdAddress})
 	if err != nil {
 		panic(err)
 	}
+	//监听的本地ip
 	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8889")
 	if err != nil {
 		panic(err)
