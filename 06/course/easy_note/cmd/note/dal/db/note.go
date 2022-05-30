@@ -30,12 +30,18 @@ type Note struct {
 	Content string `json:"content"`
 }
 
+// 返回表名 相当于实现了TableName接口  知道现在对象的表名是note
 func (n *Note) TableName() string {
 	return constants.NoteTableName
 }
 
 // CreateNote create note info
 func CreateNote(ctx context.Context, notes []*Note) error {
+	//conn := DB
+	//conn.WithContext(ctx).Create(notes)
+	//if conn.Error != nil {   //错误写法，Error永远都是nil 会调用 db.getInstance()
+	//
+	//}
 	if err := DB.WithContext(ctx).Create(notes).Error; err != nil {
 		return err
 	}
