@@ -1,0 +1,68 @@
+// Copyright 2021 CloudWeGo Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+package user;
+option go_package = "userdemo"; //表明生成的代码会存在kitex_gen/userdemo目录下
+// 使用 proto写的 BaseRep 和 thrift写的意义相同
+message BaseResp {
+    int64 status_code = 1; //响应的状态码
+    string status_message = 2; // 响应的状态消息
+    int64 service_time = 3; // 服务的时间
+}
+// 定义了一个用户的结构体
+message User {
+    int64 user_id = 1;
+    string user_name = 2;
+    string avatar = 3; //用户头像 用string来简化
+}
+// 创建用户请求  包括 用户名称和密码
+message CreateUserRequest {
+    string user_name = 1;
+    string password = 2;
+}
+// 创建用户响应
+message CreateUserResponse {
+    BaseResp base_resp = 1;
+}
+// 批量获取用户请求
+message MGetUserRequest {
+    repeated int64 user_ids = 1; // 传一组 user_ids repeated 表示一组
+}
+// 批量获取用户 的响应
+message MGetUserResponse {
+    repeated User users = 1; // 返回一组用户
+    BaseResp base_resp = 2; // 基础响应结构
+}
+// 判断 用户 名和密码 是否 成功
+message CheckUserRequest{
+    string user_name = 1;
+    string password = 2;
+}
+// 对 登入的用户名和密码返回是否正确，正确返回用户id
+message CheckUserResponse{
+    int64 user_id = 1;
+    BaseResp base_resp = 2;
+}
+// 三种服务  创建用户  获取用户  检查用户
+service UserService {
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+    rpc MGetUser (MGetUserRequest) returns (MGetUserResponse) {}
+    rpc CheckUser (CheckUserRequest) returns (CheckUserResponse) {}
+}
+
+//使用ubuntu20.04时，首先安装protoc 命令:sudo apt  install protobuf-compiler
+//生成命令:kitex -module github.com/cloudwego/kitex-examples/bizdemo/easy_note -service user -type protobuf -I ./ user.proto
+//默认为thrift类型、需要指定type为protobuf
