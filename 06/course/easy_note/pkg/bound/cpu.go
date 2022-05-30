@@ -39,12 +39,12 @@ func (c *cpuLimitHandler) OnActive(ctx context.Context, conn net.Conn) (context.
 	return ctx, nil
 }
 
-// OnRead implements the remote.InboundHandler interface.
+// OnRead implements the remote.InboundHandler interface.  实现的是请求级别限流OnRead接口
 func (c *cpuLimitHandler) OnRead(ctx context.Context, conn net.Conn) (context.Context, error) {
 	p := cpuPercent()
 	klog.CtxInfof(ctx, "current cpu is %.2g", p)
 	if p > constants.CPURateLimit {
-		return ctx, errno.ServiceErr.WithMessage(fmt.Sprintf("cpu = %.2g", c))
+		return ctx, errno.ServiceErr.WithMessage(fmt.Sprintf("cpu = %.2g", c)) //保留小数点后两位
 	}
 	return ctx, nil
 }
