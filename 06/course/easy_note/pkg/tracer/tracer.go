@@ -20,11 +20,11 @@ import (
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
-	jaegercfg "github.com/uber/jaeger-client-go/config"
+	jaegercfg "github.com/uber/jaeger-client-go/config" //分布式追踪系统
 )
 
 func InitJaeger(service string) {
-	cfg, _ := jaegercfg.FromEnv()
+	cfg, _ := jaegercfg.FromEnv() //环境变量在cmd/api/run.sh上
 	cfg.ServiceName = service
 	tracer, _, err := cfg.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
 	if err != nil {
