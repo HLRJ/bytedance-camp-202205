@@ -29,18 +29,18 @@ func Init() {
 	var err error
 	DB, err = gorm.Open(mysql.Open(constants.MySQLDefaultDSN),
 		&gorm.Config{
-			PrepareStmt:            true,
-			SkipDefaultTransaction: true,
+			PrepareStmt:            true, //缓存起来  查询更快
+			SkipDefaultTransaction: true, //当使用gorm的hook和关联创建，使用false 保持数据一致性，其他可以为ture
 		},
 	)
 	if err != nil {
 		panic(err)
 	}
-
+	// gorm使用opentracing插件
 	if err = DB.Use(gormopentracing.New()); err != nil {
 		panic(err)
 	}
-
+	//迁移表，如果存在就返回 ，不存在就报恐慌
 	m := DB.Migrator()
 	if m.HasTable(&Note{}) {
 		return
