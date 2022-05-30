@@ -40,14 +40,14 @@ func initNoteRpc() {
 
 	c, err := noteservice.NewClient(
 		constants.NoteServiceName,
-		client.WithMiddleware(middleware.CommonMiddleware),
-		client.WithInstanceMW(middleware.ClientMiddleware),
-		client.WithMuxConnection(1),                       // mux
-		client.WithRPCTimeout(3*time.Second),              // rpc timeout
-		client.WithConnectTimeout(50*time.Millisecond),    // conn timeout
-		client.WithFailureRetry(retry.NewFailurePolicy()), // retry
-		client.WithSuite(trace.NewDefaultClientSuite()),   // tracer
-		client.WithResolver(r),                            // resolver
+		client.WithMiddleware(middleware.CommonMiddleware), //client.WithMiddleware 对当前 client 增加一个中间件，在其余所有中间件之前执行
+		client.WithInstanceMW(middleware.ClientMiddleware), //client.WithInstanceMW 对当前 client 增加一个中间件，在服务发现和负载均衡之后执行（如果使用了 Proxy 则不会调用到）
+		client.WithMuxConnection(1),                        // mux
+		client.WithRPCTimeout(3*time.Second),               // rpc timeout
+		client.WithConnectTimeout(50*time.Millisecond),     // conn timeout
+		client.WithFailureRetry(retry.NewFailurePolicy()),  // retry
+		client.WithSuite(trace.NewDefaultClientSuite()),    // tracer
+		client.WithResolver(r),                             // resolver
 	)
 	if err != nil {
 		panic(err)
