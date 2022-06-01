@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// 此时client类型其实就是可以实现idl 服务（更复杂的echo）的接口类型
 func main() {
 	c, err := echo.NewClient("example", client.WithHostPorts("0.0.0.0:8888"))
 	if err != nil {
